@@ -1,12 +1,41 @@
-import { Car } from 'lucide-react'
-import { signInAction } from './actions'
+'use client'
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ error?: string }>
-}) {
-  const { error } = await searchParams
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Car } from 'lucide-react'
+
+export default function LoginPage() {
+  const router = useRouter()
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setError('')
+    setLoading(true)
+    const form = e.currentTarget
+    const email = (form.elements.namedItem('email') as HTMLInputElement).value
+    const password = (form.elements.namedItem('password') as HTMLInputElement).value
+
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || 'حدث خطأ')
+      } else {
+        router.push('/admin')
+        router.refresh()
+      }
+    } catch {
+      setError('تعذر الاتصال بالسيرفر')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center p-4" dir="rtl">
@@ -25,11 +54,11 @@ export default async function LoginPage({
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
           {error && (
             <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
-              <p className="text-red-400 text-sm text-center">{decodeURIComponent(error)}</p>
+              <p className="text-red-400 text-sm text-center">{error}</p>
             </div>
           )}
 
-          <form action={signInAction} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm text-white/60 mb-1.5">البريد الإلكتروني</label>
               <input
@@ -54,9 +83,10 @@ export default async function LoginPage({
             </div>
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-yellow-600 to-yellow-400 text-black font-bold py-3 rounded-xl transition-all hover:opacity-90 mt-2"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-yellow-600 to-yellow-400 text-black font-bold py-3 rounded-xl transition-all hover:opacity-90 mt-2 disabled:opacity-60"
             >
-              تسجيل الدخول
+              {loading ? 'جاري التحقق...' : 'تسجيل الدخول'}
             </button>
           </form>
         </div>
