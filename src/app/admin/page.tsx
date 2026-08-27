@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { createClient, isSupabaseConfigured } from '@/lib/supabase/client'
+import { isSupabaseConfigured } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Lead, LeadStats, LeadStatus } from '@/types'
 import {
@@ -235,7 +235,6 @@ export default function AdminDashboardWrapper() {
 // -- Main Dashboard --
 function AdminDashboard() {
   const router = useRouter()
-  const supabase = createClient()
 
   const [leads, setLeads] = useState<Lead[]>([])
   const [filteredLeads, setFilteredLeads] = useState<Lead[]>([])
@@ -250,27 +249,20 @@ function AdminDashboard() {
   const fetchLeads = useCallback(async () => {
     setLoading(true)
     try {
-      const { data, error } = await supabase
-        .from('leads')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-      if (error) throw error
+      const res = await fetch('/api/leads')
+      if (!res.ok) throw new Error()
+      const data = await res.json()
       setLeads(data || [])
     } catch {
       toast.error('فشل تحميل البيانات')
     } finally {
       setLoading(false)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUserEmail(data.user?.email || '')
-    })
+    setUserEmail('admin@cars.com')
     fetchLeads()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchLeads])
 
   // Compute stats from leads
@@ -353,7 +345,7 @@ function AdminDashboard() {
   }
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    await fetch('/api/admin/logout', { method: 'POST' })
     router.push('/admin/login')
     router.refresh()
   }
