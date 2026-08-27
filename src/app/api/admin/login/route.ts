@@ -1,17 +1,18 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 export async function POST(request: Request) {
   const { email, password } = await request.json()
 
   if (!email || !password) {
     return NextResponse.json({ error: 'بيانات ناقصة' }, { status: 400 })
   }
+
+  // Use anon key for signInWithPassword (standard client auth flow)
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
