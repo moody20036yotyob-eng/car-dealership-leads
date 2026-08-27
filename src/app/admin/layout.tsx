@@ -1,4 +1,7 @@
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  // Auth protection is handled by middleware — layout just renders children
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  // Allow login page to render without auth check
   return <>{children}</>
 }
