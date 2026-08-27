@@ -562,7 +562,7 @@ function AdminDashboard() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as LeadStatus | 'all')}
-            className="bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white/70 focus:outline-none focus:ring-2 focus:ring-gold-500/20 text-sm"
+            className="bg-[#1A1A1A] border border-white/10 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500/20 text-sm"
           >
             <option value="all">كل الحالات</option>
             {LEAD_STATUSES.map((s) => (
@@ -575,7 +575,7 @@ function AdminDashboard() {
           <select
             value={dateFilter}
             onChange={(e) => setDateFilter(e.target.value as typeof dateFilter)}
-            className="bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-white/70 focus:outline-none focus:ring-2 focus:ring-gold-500/20 text-sm"
+            className="bg-[#1A1A1A] border border-white/10 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500/20 text-sm"
           >
             <option value="all">كل الفترات</option>
             <option value="today">اليوم</option>
@@ -671,10 +671,7 @@ function AdminDashboard() {
                             onChange={(e) =>
                               handleStatusChange(lead.id, e.target.value as LeadStatus)
                             }
-                            className={cn(
-                              'rounded-lg px-2 py-1 text-xs font-medium border bg-transparent cursor-pointer focus:outline-none',
-                              STATUS_COLORS[lead.status]
-                            )}
+                            className="bg-[#1A1A1A] border border-white/20 rounded-lg px-2 py-1 text-xs font-medium text-white cursor-pointer focus:outline-none"
                           >
                             {LEAD_STATUSES.map((s) => (
                               <option key={s} value={s} className="bg-[#1A1A1A] text-white">
