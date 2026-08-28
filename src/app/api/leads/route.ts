@@ -8,6 +8,10 @@ const leadSchema = z.object({
   source: z.string().default('TikTok'),
   campaign: z.string().nullable().optional(),
   ad: z.string().nullable().optional(),
+  client_type: z.enum(['individual', 'company']).nullable().optional(),
+  payment_method: z.enum(['cash', 'finance']).nullable().optional(),
+  city: z.string().max(100).nullable().optional(),
+  car_wanted: z.string().max(200).nullable().optional(),
 })
 
 export async function GET() {
@@ -48,6 +52,10 @@ export async function POST(request: NextRequest) {
         source: validated.source,
         campaign: validated.campaign || null,
         ad: validated.ad || null,
+        client_type: validated.client_type || null,
+        payment_method: validated.payment_method || null,
+        city: validated.city?.trim() || null,
+        car_wanted: validated.car_wanted?.trim() || null,
         status: 'new',
       })
       .select()

@@ -8,6 +8,10 @@ export interface Lead {
   source: string
   campaign: string | null
   ad: string | null
+  client_type: 'individual' | 'company' | null
+  payment_method: 'cash' | 'finance' | null
+  city: string | null
+  car_wanted: string | null
   created_at: string
   updated_at: string
 }
