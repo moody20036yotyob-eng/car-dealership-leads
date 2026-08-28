@@ -133,10 +133,14 @@ function LeadModal({
 
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label: 'المصدر', value: lead.source },
+              { label: 'نوع العميل', value: lead.client_type === 'individual' ? 'أفراد' : lead.client_type === 'company' ? 'شركات' : '—' },
+              { label: 'الجنسية', value: lead.nationality === 'citizen' ? 'مواطن' : lead.nationality === 'resident' ? 'مقيم' : '—' },
+              { label: 'طريقة الدفع', value: lead.payment_method === 'cash' ? 'كاش' : lead.payment_method === 'finance' ? 'تمويل' : '—' },
+              { label: 'المدينة', value: lead.city || '—' },
+              { label: 'السيارة المطلوبة', value: lead.car_wanted || '—' },
               { label: 'الحالة', value: STATUS_LABELS[lead.status] },
+              { label: 'المصدر', value: lead.source },
               { label: 'الحملة', value: lead.campaign || '—' },
-              { label: 'الإعلان', value: lead.ad || '—' },
             ].map(({ label, value }) => (
               <div key={label} className="p-3 bg-white/5 rounded-xl">
                 <p className="text-white/40 text-xs mb-1">{label}</p>
@@ -627,9 +631,11 @@ function AdminDashboard() {
                       {[
                         'الاسم',
                         'رقم الجوال',
-                        'المصدر',
-                        'الحملة',
-                        'الإعلان',
+                        'نوع العميل',
+                        'الجنسية',
+                        'طريقة الدفع',
+                        'المدينة',
+                        'السيارة المطلوبة',
                         'الحالة',
                         'تاريخ التسجيل',
                         'الإجراءات',
@@ -660,11 +666,17 @@ function AdminDashboard() {
                         <td className="px-4 py-3 text-white/60 text-sm">
                           {formatPhoneDisplay(lead.phone)}
                         </td>
-                        <td className="px-4 py-3 text-white/60 text-sm">{lead.source}</td>
                         <td className="px-4 py-3 text-white/60 text-sm">
-                          {lead.campaign || '—'}
+                          {lead.client_type === 'individual' ? 'أفراد' : lead.client_type === 'company' ? 'شركات' : '—'}
                         </td>
-                        <td className="px-4 py-3 text-white/60 text-sm">{lead.ad || '—'}</td>
+                        <td className="px-4 py-3 text-white/60 text-sm">
+                          {lead.nationality === 'citizen' ? 'مواطن' : lead.nationality === 'resident' ? 'مقيم' : '—'}
+                        </td>
+                        <td className="px-4 py-3 text-white/60 text-sm">
+                          {lead.payment_method === 'cash' ? 'كاش' : lead.payment_method === 'finance' ? 'تمويل' : '—'}
+                        </td>
+                        <td className="px-4 py-3 text-white/60 text-sm">{lead.city || '—'}</td>
+                        <td className="px-4 py-3 text-white/60 text-sm">{lead.car_wanted || '—'}</td>
                         <td className="px-4 py-3">
                           <select
                             value={lead.status}
@@ -731,6 +743,33 @@ function AdminDashboard() {
                         </div>
                       </div>
                       <StatusBadge status={lead.status} />
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {lead.client_type && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                          {lead.client_type === 'individual' ? 'أفراد' : 'شركات'}
+                        </span>
+                      )}
+                      {lead.nationality && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                          {lead.nationality === 'citizen' ? 'مواطن' : 'مقيم'}
+                        </span>
+                      )}
+                      {lead.payment_method && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
+                          {lead.payment_method === 'cash' ? 'كاش' : 'تمويل'}
+                        </span>
+                      )}
+                      {lead.city && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-white/50 border border-white/10">
+                          {lead.city}
+                        </span>
+                      )}
+                      {lead.car_wanted && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20">
+                          {lead.car_wanted}
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center justify-between">
                       <p className="text-white/30 text-xs">{formatDate(lead.created_at)}</p>
