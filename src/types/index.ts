@@ -10,6 +10,7 @@ export interface Lead {
   ad: string | null
   client_type: 'individual' | 'company' | null
   payment_method: 'cash' | 'finance' | null
+  nationality: 'citizen' | 'resident' | null
   city: string | null
   car_wanted: string | null
   created_at: string

@@ -10,6 +10,7 @@ const leadSchema = z.object({
   ad: z.string().nullable().optional(),
   client_type: z.enum(['individual', 'company']).nullable().optional(),
   payment_method: z.enum(['cash', 'finance']).nullable().optional(),
+  nationality: z.enum(['citizen', 'resident']).nullable().optional(),
   city: z.string().max(100).nullable().optional(),
   car_wanted: z.string().max(200).nullable().optional(),
 })
@@ -54,6 +55,7 @@ export async function POST(request: NextRequest) {
         ad: validated.ad || null,
         client_type: validated.client_type || null,
         payment_method: validated.payment_method || null,
+        nationality: validated.nationality || null,
         city: validated.city?.trim() || null,
         car_wanted: validated.car_wanted?.trim() || null,
         status: 'new',

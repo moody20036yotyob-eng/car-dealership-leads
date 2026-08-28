@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 const schema = z.object({
   client_type: z.enum(['individual', 'company'], { required_error: 'اختر نوع العميل' }),
   payment_method: z.enum(['cash', 'finance'], { required_error: 'اختر طريقة الدفع' }),
+  nationality: z.enum(['citizen', 'resident'], { required_error: 'اختر الجنسية' }),
   name: z
     .string()
     .min(2, 'الاسم يجب أن يكون حرفين على الأقل')
@@ -45,11 +46,12 @@ export default function LeadFormPage() {
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { client_type: 'individual', payment_method: 'cash' },
+    defaultValues: { client_type: 'individual', payment_method: 'cash', nationality: 'citizen' },
   })
 
   const clientType = watch('client_type')
   const paymentMethod = watch('payment_method')
+  const nationality = watch('nationality')
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -68,6 +70,7 @@ export default function LeadFormPage() {
           ad: utmParams.utm_content || null,
           client_type: data.client_type,
           payment_method: data.payment_method,
+          nationality: data.nationality,
           city: data.city,
           car_wanted: data.car_wanted,
         }),
@@ -180,6 +183,31 @@ export default function LeadFormPage() {
                     ))}
                   </div>
                   {errors.payment_method && <p className="mt-1.5 text-red-400 text-xs">{errors.payment_method.message}</p>}
+                </div>
+
+                {/* Nationality */}
+                <div>
+                  <label className="block text-sm font-medium text-white/70 mb-3">الجنسية *</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { value: 'citizen', label: 'مواطن' },
+                      { value: 'resident', label: 'مقيم' },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setValue('nationality', opt.value as 'citizen' | 'resident')}
+                        className={`py-3 rounded-xl border text-sm font-medium transition-all ${
+                          nationality === opt.value
+                            ? 'bg-yellow-500/20 border-yellow-500/60 text-yellow-400'
+                            : 'bg-white/5 border-white/10 text-white/60 hover:border-white/20'
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                  {errors.nationality && <p className="mt-1.5 text-red-400 text-xs">{errors.nationality.message}</p>}
                 </div>
 
                 {/* Name */}
