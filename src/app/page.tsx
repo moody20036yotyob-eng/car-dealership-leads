@@ -21,11 +21,10 @@ export default function ComingSoon() {
           </svg>
         </div>
 
-        <h1 className="text-3xl font-bold text-white mb-3">قريباً</h1>
+        <h1 className="text-3xl font-bold text-white mb-3">تم تعطيل الموقع مؤقتاً</h1>
         <div className="w-16 h-px bg-gradient-to-r from-transparent via-yellow-400 to-transparent mx-auto mb-4" />
         <p className="text-white/50 text-sm leading-relaxed">
-          نعمل على تطوير تجربة أفضل لكم.<br />
-          ترقبوا الإطلاق قريباً.
+          نعتذر عن الإزعاج، سنعود قريباً.
         </p>
       </div>
     </div>
